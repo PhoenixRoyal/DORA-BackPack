@@ -1,0 +1,14 @@
+﻿<Properties StartupItem="Backpack\Backpack.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Backpack\Program.cs">
+    <Files>
+      <File FileName="Backpack\Program.cs" Line="14" Column="4" />
+      <File FileName="GtkCodeView\GtkCodeView.cs" Line="30" Column="40" />
+      <File FileName="Backpack\MainWindow.cs" Line="9" Column="12" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
