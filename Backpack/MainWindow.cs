@@ -7,11 +7,12 @@ public partial class MainWindow: Gtk.Window
 	public MainWindow (): base (Gtk.WindowType.Toplevel)
 	{
 		Build();
-		//var l = LanguageDescription.LoadFromFile("/home/florian/C.json");
-		//var t = Theme.LoadFromFile("/home/florian/Test.json");
-		var view = new GtkCodeView.GtkCodeView();
-		//view.SetTheme(t);
+		var l = LanguageDescription.LoadFromFile("/home/florian/CSharp.json");
+		var t = Theme.LoadFromFile("/home/florian/Test.json");
+		var view = new GtkCodeView.GtkCodeView(l);
+		view.SetTheme(t);
 		this.Add(view);
+		SetSizeRequest(300, 400);
 		this.ShowAll();
 	}
 
