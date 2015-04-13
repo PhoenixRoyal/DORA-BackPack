@@ -12,7 +12,7 @@ namespace GtkCodeView
 
 		public static LanguageDescription LoadFromFile(string file)
 		{
-			string json = File.ReadAllText(file);
+			string json = File.ReadAllText(file); 
 			return JsonConvert.DeserializeObject<LanguageDescription>(json);
 		}
 	}
