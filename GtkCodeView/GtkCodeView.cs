@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Gtk;
 using Gdk;
@@ -11,9 +12,9 @@ namespace GtkCodeView
 		#region Fields
 		public LanguageDescription Language { get; set; }
 		public Theme Theme { get; set; }
-		private Regex _keywords = new Regex("");
-		private Regex _comments = new Regex("");
-		private Regex _strings = new Regex("");
+        private Regex _keywords;
+        private Regex _comments;
+        private Regex _strings;
 		private TextTag _keywordTag = new TextTag("keyword");
 		private TextTag _commentTag = new TextTag("comment");
 		private TextTag _stringTag = new TextTag("string");
@@ -29,8 +30,9 @@ namespace GtkCodeView
 			Buffer.TagTable.Add(_bracketTag);
 			_strings = new Regex("\"(.*?)\"");
 			this.Buffer.Changed += HandleBufferChangedEvent;
-			this.ExposeEvent += DrawGutter;
 			this.MoveCursor += (o, args) => HiglightBrackets();
+            SetBorderWindowSize(TextWindowType.Left, 25);
+            this.ExposeEvent += GtkCodeView_ExposeEvent;
 		}
 
 		public GtkCodeView(LanguageDescription lang) :
@@ -47,8 +49,32 @@ namespace GtkCodeView
 		{
 			HighlightText();
 		}
-		#endregion
 
+        void GtkCodeView_ExposeEvent(object o, ExposeEventArgs args)
+        {
+            if (!this.IsDrawable) return;
+            
+            var layout = new Pango.Layout(this.PangoContext);
+            var window = this.GetWindow(TextWindowType.Left);
+            var markup = "";
+            int x, y;
+            BufferToWindowCoords(TextWindowType.Left, VisibleRect.Left, VisibleRect.Top, out x, out y);
+            y *= -1;
+            var iter = GetIterAtLocation(VisibleRect.Left, VisibleRect.Top);
+            var endIter = GetIterAtLocation(VisibleRect.Left, VisibleRect.Bottom);
+            for (int i = iter.Line; i < endIter.Line+1; i++)
+            {
+                markup += i + "\n";
+            }
+            layout.SetMarkup(markup);
+            layout.Alignment = Pango.Alignment.Left;
+            if (args.Event.Window != window) return;
+            window.ClearArea(window.VisibleRegion.Clipbox, false);
+            window.DrawLayout(new Gdk.GC((Gdk.Drawable)GdkWindow), 2, y, layout);
+        }
+
+		#endregion
+        
 		#region Methods
 		public void SetTheme(Theme th)
 		{
@@ -56,36 +82,41 @@ namespace GtkCodeView
 			ApplyTheme();
 		}
 
-		public void DrawGutter(object o, ExposeEventArgs e)
-		{
-
-		}
-
 		public void HighlightText()
 		{
-			TextIter iter = GetIterAtLocation(VisibleRect.Left, VisibleRect.Top); 
-			var text = Buffer.GetText(iter,Buffer.EndIter, false);
-			Buffer.RemoveAllTags(iter, Buffer.EndIter);
+			TextIter iter = GetIterAtLocation(VisibleRect.Left, VisibleRect.Top);
+            TextIter endIter = GetIterAtLocation(VisibleRect.Left, VisibleRect.Bottom);
+			var text = Buffer.GetText(iter,endIter, false);
+			Buffer.RemoveAllTags(iter, endIter);
 			TextIter start, end;
-			foreach (Match m in _keywords.Matches(text)) 
-			{
-				start = Buffer.GetIterAtOffset(iter.Offset + m.Index);
-				end = Buffer.GetIterAtOffset(iter.Offset + m.Index + m.Length);
-				Buffer.ApplyTag("keyword", start, end);
-			}
-			foreach (Match m in _strings.Matches(text)) 
-			{
-				start = Buffer.GetIterAtOffset(iter.Offset + m.Index);
-				end = Buffer.GetIterAtOffset(iter.Offset + m.Index + m.Length);
-				Buffer.ApplyTag("string", start, end);
-			}
-			foreach (Match m in _comments.Matches(text))
-			{
-				start = Buffer.GetIterAtOffset(iter.Offset + m.Index);
-				end = Buffer.GetIterAtOffset(iter.Offset + m.Index + m.Length);
-				Buffer.ApplyTag("comment", start, end);
-			}
-			HiglightBrackets();
+            if (_keywords != null)
+            {
+                foreach (Match m in _keywords.Matches(text))
+                {
+                    start = Buffer.GetIterAtOffset(iter.Offset + m.Index);
+                    end = Buffer.GetIterAtOffset(iter.Offset + m.Index + m.Length);
+                    Buffer.ApplyTag("keyword", start, end);
+                }
+            }
+            if (_strings != null)
+            {
+                foreach (Match m in _strings.Matches(text))
+                {
+                    start = Buffer.GetIterAtOffset(iter.Offset + m.Index);
+                    end = Buffer.GetIterAtOffset(iter.Offset + m.Index + m.Length);
+                    Buffer.ApplyTag("string", start, end);
+                }
+            }
+            if (_comments != null)
+            {
+                foreach (Match m in _comments.Matches(text))
+                {
+                    start = Buffer.GetIterAtOffset(iter.Offset + m.Index);
+                    end = Buffer.GetIterAtOffset(iter.Offset + m.Index + m.Length);
+                    Buffer.ApplyTag("comment", start, end);
+                }
+            }
+            HiglightBrackets();
 		}
 
 		private void ApplyTheme()
@@ -100,6 +131,8 @@ namespace GtkCodeView
 			Gdk.Color.Parse(Theme.Background, ref bg);
 			ModifyBase(StateType.Normal, bg);
 			ModifyText(StateType.Normal, fg);
+            if (Theme.Font != "")
+                ModifyFont(FontDescription.FromString(Theme.Font));
 		}
 
 		public void SetLanguage(LanguageDescription lang)
@@ -128,7 +161,8 @@ namespace GtkCodeView
 
 		private void HiglightBrackets()
 		{
-			Buffer.RemoveTag ("bracket", Buffer.StartIter, Buffer.EndIter);
+            TextIter iter = GetIterAtLocation(VisibleRect.Left, VisibleRect.Top);
+			Buffer.RemoveTag ("bracket", iter, Buffer.EndIter);
 			var openingBrackets = new string[] { "(", "{", "[", "<" };
 			var closingBrackets = new string[] { ")", "}", "]", ">" };
 			var begin = Buffer.GetIterAtOffset(Buffer.CursorPosition-1);
@@ -183,4 +217,3 @@ namespace GtkCodeView
 		#endregion
 	}
 }
-

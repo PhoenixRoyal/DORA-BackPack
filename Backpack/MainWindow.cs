@@ -7,8 +7,8 @@ public partial class MainWindow: Gtk.Window
 	public MainWindow (): base (Gtk.WindowType.Toplevel)
 	{
 		Build();
-		var l = LanguageDescription.LoadFromFile("/home/florian/CSharp.json");
-		var t = Theme.LoadFromFile("/home/florian/Test.json");
+		var l = LanguageDescription.LoadFromFile("CSharp.json");
+		var t = Theme.LoadFromFile("Theme.json");
 		var view = new GtkCodeView.GtkCodeView(l);
 		view.SetTheme(t);
 		this.Add(view);

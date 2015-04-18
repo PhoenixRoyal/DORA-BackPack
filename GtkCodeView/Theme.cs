@@ -12,6 +12,9 @@ namespace GtkCodeView
 		public string Brackets { get; set; }
 		public string Background { get; set; }
 		public string Foreground { get; set; }
+        public string Font { get; set; }
+        public string GutterBackground { get; set; }
+        public string GutterForeground { get; set; }
 
 		public static Theme LoadFromFile(string file)
 		{
