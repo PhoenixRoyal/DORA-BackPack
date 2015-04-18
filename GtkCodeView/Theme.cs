@@ -15,6 +15,7 @@ namespace GtkCodeView
         public string Font { get; set; }
         public string GutterBackground { get; set; }
         public string GutterForeground { get; set; }
+        public string GutterFont { get; set; }
 
 		public static Theme LoadFromFile(string file)
 		{

@@ -19,6 +19,7 @@ namespace GtkCodeView
 		private TextTag _commentTag = new TextTag("comment");
 		private TextTag _stringTag = new TextTag("string");
 		private TextTag _bracketTag = new TextTag("bracket");
+        private Popup Popup;
 		#endregion
 
 		#region Constructors
@@ -33,6 +34,7 @@ namespace GtkCodeView
 			this.MoveCursor += (o, args) => HiglightBrackets();
             SetBorderWindowSize(TextWindowType.Left, 25);
             this.ExposeEvent += GtkCodeView_ExposeEvent;
+            Popup = new Popup(this.Buffer);
 		}
 
 		public GtkCodeView(LanguageDescription lang) :
@@ -40,6 +42,7 @@ namespace GtkCodeView
 		{
 			Language = lang;
 			CreateRegex();
+            Popup.Items.AddRange(Language.Keywords);
 		}
 		#endregion
 
@@ -69,6 +72,12 @@ namespace GtkCodeView
             layout.SetMarkup(markup);
             layout.Alignment = Pango.Alignment.Left;
             if (args.Event.Window != window) return;
+            if (Theme.GutterForeground != null)
+            {
+                Pango.Color p = new Pango.Color();
+                p.Parse(Theme.GutterForeground);
+                layout.Attributes.Insert(new Pango.AttrForeground(p));
+            }
             window.ClearArea(window.VisibleRegion.Clipbox, false);
             window.DrawLayout(new Gdk.GC((Gdk.Drawable)GdkWindow), 2, y, layout);
         }
@@ -117,6 +126,7 @@ namespace GtkCodeView
                 }
             }
             HiglightBrackets();
+            CreatePopUp();
 		}
 
 		private void ApplyTheme()
@@ -139,6 +149,8 @@ namespace GtkCodeView
 		{
 			Language = lang;
 			CreateRegex();
+            Popup.Items.Clear();
+            Popup.Items.AddRange(Language.Keywords);
 		}
 
 		private void CreateRegex()
@@ -214,6 +226,20 @@ namespace GtkCodeView
 				}
 			}
 		}
+
+        private void CreatePopUp()
+        {
+            Popup.DisplayWindow.Destroy();
+            var insertMark = Buffer.InsertMark;
+            var iter = Buffer.GetIterAtMark(insertMark);
+            var end = iter;
+            if(iter.EndsWord())
+            {
+                iter.BackwardWordStart();
+                var text = iter.GetText(end);
+                Popup.ShowSuggestion(text, Buffer, this);
+            }
+        }
 		#endregion
 	}
 }
