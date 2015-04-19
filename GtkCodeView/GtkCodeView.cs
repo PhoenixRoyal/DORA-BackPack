@@ -19,6 +19,8 @@ namespace GtkCodeView
 		private TextTag _commentTag = new TextTag("comment");
 		private TextTag _stringTag = new TextTag("string");
 		private TextTag _bracketTag = new TextTag("bracket");
+        public Boolean ShowSuggestions { get; set; }
+        private Gdk.Key _lastKey;
         private Popup Popup;
 		#endregion
 
@@ -34,8 +36,16 @@ namespace GtkCodeView
 			this.MoveCursor += (o, args) => HiglightBrackets();
             SetBorderWindowSize(TextWindowType.Left, 25);
             this.ExposeEvent += GtkCodeView_ExposeEvent;
+            this.KeyPressEvent += GtkCodeView_KeyPressEvent;
             Popup = new Popup(this.Buffer);
+            ShowSuggestions = true;
 		}
+
+        [GLib.ConnectBefore]
+        void GtkCodeView_KeyPressEvent(object o, KeyPressEventArgs args)
+        {
+            _lastKey = args.Event.Key;
+        }
 
 		public GtkCodeView(LanguageDescription lang) :
 			this()
@@ -72,7 +82,7 @@ namespace GtkCodeView
             layout.SetMarkup(markup);
             layout.Alignment = Pango.Alignment.Left;
             if (args.Event.Window != window) return;
-            if (Theme.GutterForeground != null)
+            if (Theme != null && Theme.GutterForeground != null)
             {
                 Pango.Color p = new Pango.Color();
                 p.Parse(Theme.GutterForeground);
@@ -126,20 +136,28 @@ namespace GtkCodeView
                 }
             }
             HiglightBrackets();
+            Console.WriteLine("Buffer Changed");
             CreatePopUp();
 		}
 
 		private void ApplyTheme()
 		{
-			_keywordTag.Foreground = Theme.Keywords;
-			_commentTag.Foreground = Theme.Comments;
-			_stringTag.Foreground = Theme.Strings;
-			_bracketTag.Background = Theme.Brackets;
+            if (Theme == null) return;
+            if(Theme.Keywords != "")
+			    _keywordTag.Foreground = Theme.Keywords;
+            if(Theme.Comments != "")
+			    _commentTag.Foreground = Theme.Comments;
+            if(Theme.Strings != "")
+			    _stringTag.Foreground = Theme.Strings;
+            if(Theme.Brackets != "")
+			    _bracketTag.Background = Theme.Brackets;
 			var fg = Gdk.Color.Zero;
 			var bg = Gdk.Color.Zero;
 			Gdk.Color.Parse(Theme.Foreground, ref fg);
 			Gdk.Color.Parse(Theme.Background, ref bg);
-			ModifyBase(StateType.Normal, bg);
+            if(Theme.Foreground != "")
+			    ModifyBase(StateType.Normal, bg);
+            if(Theme.Background != "")
 			ModifyText(StateType.Normal, fg);
             if (Theme.Font != "")
                 ModifyFont(FontDescription.FromString(Theme.Font));
@@ -155,19 +173,22 @@ namespace GtkCodeView
 
 		private void CreateRegex()
 		{
+            if (Language == null) return;
 			var pattern = "(";
-			foreach (var s in Language.Keywords) 
-			{
-				pattern += @"\b" + s + @"\b|";
-			}
+            if(Language.Keywords != null)
+			    foreach (var s in Language.Keywords) 
+			    {
+				    pattern += @"\b" + s + @"\b|";
+			    }
 			pattern = pattern.Remove(pattern.Length - 1);
 			pattern += ")";
 			_keywords = new Regex(pattern);
 			pattern = @"(/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+/)";
-			foreach (var s in Language.Comments) 
-			{
-				pattern += "|("+s+".*)";
-			}
+            if(Language.Comments != null)
+			    foreach (var s in Language.Comments) 
+			    {
+				    pattern += "|("+s+".*)";
+			    }
 			_comments = new Regex(pattern);
 		}
 
@@ -229,6 +250,7 @@ namespace GtkCodeView
 
         private void CreatePopUp()
         {
+            if (ShowSuggestions != true) return;
             Popup.DisplayWindow.Destroy();
             var insertMark = Buffer.InsertMark;
             var iter = Buffer.GetIterAtMark(insertMark);
@@ -237,7 +259,12 @@ namespace GtkCodeView
             {
                 iter.BackwardWordStart();
                 var text = iter.GetText(end);
-                Popup.ShowSuggestion(text, Buffer, this);
+                var display = true;
+                foreach (var s in Language.Keywords)
+                    if (s == text)
+                        display = false;
+                if(_lastKey != Gdk.Key.BackSpace && display)
+                    Popup.ShowSuggestion(text, Buffer, this);
             }
         }
 		#endregion

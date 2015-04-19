@@ -19,8 +19,16 @@ namespace GtkCodeView
 
 		public static Theme LoadFromFile(string file)
 		{
-			string json = File.ReadAllText(file); 
-			return JsonConvert.DeserializeObject<Theme>(json);
+            try
+            {
+                string json = File.ReadAllText(file);
+                return JsonConvert.DeserializeObject<Theme>(json);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                return null;
+            }
 		}
 	}
 }

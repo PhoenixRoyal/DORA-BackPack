@@ -71,11 +71,17 @@
     <Compile Include="gtk-gui\generated.cs" />
     <Compile Include="MainWindow.cs" />
     <Compile Include="gtk-gui\MainWindow.cs" />
+    <Compile Include="Plugins\IPluginContext.cs" />
+    <Compile Include="Plugins\PluginLoader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <ProjectReference Include="..\BackpackAPI\BackpackAPI.csproj">
+      <Project>{e4c41571-0951-47e5-b24f-d8533e0504ba}</Project>
+      <Name>BackpackAPI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GtkCodeView\GtkCodeView.csproj">
       <Project>{85BEFE87-92F0-4633-90FA-EE1E9E95527A}</Project>
       <Name>GtkCodeView</Name>

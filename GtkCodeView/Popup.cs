@@ -7,17 +7,58 @@ using Gtk;
 
 namespace GtkCodeView
 {
-    class Popup
+    class Popup : IDisposable
     {
         public List<String> Items { get; private set; }
         public Window DisplayWindow { get; private set; }
         private string _filterText;
+        private TreeView tree;
+        private TextBuffer _buffer;
         private bool _shouldDisplay;
 
         public Popup(TextBuffer buffer)
         {
             Items = new List<string>();
-            DisplayWindow = new Window(WindowType.Popup);
+            DisplayWindow = new Window(WindowType.Toplevel);
+            DisplayWindow.Decorated = false;
+            DisplayWindow.TypeHint = Gdk.WindowTypeHint.PopupMenu;
+            _buffer = buffer;
+        }
+
+        [GLib.ConnectBefore]
+        void DisplayWindow_KeyPressEvent(object o, KeyPressEventArgs args)
+        {
+            var key = args.Event.Key;
+            if(key != Gdk.Key.Down &&
+               key != Gdk.Key.Up &&
+               key != Gdk.Key.Left &&
+               key != Gdk.Key.Right)
+            {
+                if (args.Event.KeyValue >= 33 && args.Event.KeyValue <= 126)
+                {
+                    _buffer.InsertAtCursor(key.ToString());
+                }
+                if (args.Event.Key == Gdk.Key.space || args.Event.Key == Gdk.Key.Tab)
+                {
+                    var model = tree.Model;
+                    TreeIter iter;
+                    var text = "";
+                    if (tree.Selection.GetSelected(out model, out iter))
+                    {
+                        text = (string)model.GetValue(iter, 0);
+                        _buffer.InsertAtCursor(text.Remove(0, _filterText.Length));
+                    }
+                    _buffer.InsertAtCursor(" ");
+                }
+                if (args.Event.Key == Gdk.Key.BackSpace)
+                {
+                    var start = _buffer.GetIterAtMark(_buffer.InsertMark);
+                    var end = start;
+                    start.BackwardChar();
+                    _buffer.Delete(ref start, ref end);
+                }
+                DisplayWindow.Destroy();
+            }
         }
 
         public void ShowSuggestion(string text, TextBuffer buffer, TextView view)
@@ -35,7 +76,9 @@ namespace GtkCodeView
             eb.BorderWidth = 1;
             DisplayWindow.Add(eb);
 
-            var tree = new TreeView();
+            tree = new TreeView();
+            tree.KeyPressEvent += DisplayWindow_KeyPressEvent;
+            tree.Shown += tree_Shown;
             eb.Add(tree);
             var suggestions = new TreeViewColumn();
             tree.AppendColumn(suggestions);
@@ -62,9 +105,17 @@ namespace GtkCodeView
             Color = new Gdk.Color(255, 255, 150);
             render.BackgroundGdk = Color;
             tree.ModifyBg(StateType.Normal, Color);
-            if(_shouldDisplay)
+            if (_shouldDisplay)
+            {
                 DisplayWindow.ShowAll();
+            }
             _shouldDisplay = false;
+        }
+
+        void tree_Shown(object sender, EventArgs e)
+        {
+            while (Gdk.Keyboard.Grab(DisplayWindow.GdkWindow, false, 0) != Gdk.GrabStatus.Success)
+                System.Threading.Thread.Sleep(100);
         }
 
         private bool FilterItems(Gtk.TreeModel model, Gtk.TreeIter iter)
@@ -84,6 +135,11 @@ namespace GtkCodeView
             }
             else
                 return false;
+        }
+
+        public void Dispose()
+        {
+            tree.Dispose();
         }
     }
 }

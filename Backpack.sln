@@ -1,24 +1,59 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backpack", "Backpack\Backpack.csproj", "{C9EAF615-C9C0-4848-98E6-B231F38EE76A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GtkCodeView", "GtkCodeView\GtkCodeView.csproj", "{85BEFE87-92F0-4633-90FA-EE1E9E95527A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackpackAPI", "BackpackAPI\BackpackAPI.csproj", "{E4C41571-0951-47E5-B24F-D8533E0504BA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|Mixed Platforms = Debug|Mixed Platforms
 		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|Mixed Platforms = Release|Mixed Platforms
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{85BEFE87-92F0-4633-90FA-EE1E9E95527A}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{85BEFE87-92F0-4633-90FA-EE1E9E95527A}.Debug|x86.Build.0 = Debug|Any CPU
-		{85BEFE87-92F0-4633-90FA-EE1E9E95527A}.Release|x86.ActiveCfg = Release|Any CPU
-		{85BEFE87-92F0-4633-90FA-EE1E9E95527A}.Release|x86.Build.0 = Release|Any CPU
+		{C9EAF615-C9C0-4848-98E6-B231F38EE76A}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{C9EAF615-C9C0-4848-98E6-B231F38EE76A}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{C9EAF615-C9C0-4848-98E6-B231F38EE76A}.Debug|Mixed Platforms.Build.0 = Debug|x86
 		{C9EAF615-C9C0-4848-98E6-B231F38EE76A}.Debug|x86.ActiveCfg = Debug|x86
 		{C9EAF615-C9C0-4848-98E6-B231F38EE76A}.Debug|x86.Build.0 = Debug|x86
+		{C9EAF615-C9C0-4848-98E6-B231F38EE76A}.Release|Any CPU.ActiveCfg = Release|x86
+		{C9EAF615-C9C0-4848-98E6-B231F38EE76A}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{C9EAF615-C9C0-4848-98E6-B231F38EE76A}.Release|Mixed Platforms.Build.0 = Release|x86
 		{C9EAF615-C9C0-4848-98E6-B231F38EE76A}.Release|x86.ActiveCfg = Release|x86
 		{C9EAF615-C9C0-4848-98E6-B231F38EE76A}.Release|x86.Build.0 = Release|x86
+		{85BEFE87-92F0-4633-90FA-EE1E9E95527A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85BEFE87-92F0-4633-90FA-EE1E9E95527A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85BEFE87-92F0-4633-90FA-EE1E9E95527A}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{85BEFE87-92F0-4633-90FA-EE1E9E95527A}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{85BEFE87-92F0-4633-90FA-EE1E9E95527A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{85BEFE87-92F0-4633-90FA-EE1E9E95527A}.Debug|x86.Build.0 = Debug|Any CPU
+		{85BEFE87-92F0-4633-90FA-EE1E9E95527A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85BEFE87-92F0-4633-90FA-EE1E9E95527A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85BEFE87-92F0-4633-90FA-EE1E9E95527A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{85BEFE87-92F0-4633-90FA-EE1E9E95527A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{85BEFE87-92F0-4633-90FA-EE1E9E95527A}.Release|x86.ActiveCfg = Release|Any CPU
+		{85BEFE87-92F0-4633-90FA-EE1E9E95527A}.Release|x86.Build.0 = Release|Any CPU
+		{E4C41571-0951-47E5-B24F-D8533E0504BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4C41571-0951-47E5-B24F-D8533E0504BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4C41571-0951-47E5-B24F-D8533E0504BA}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{E4C41571-0951-47E5-B24F-D8533E0504BA}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{E4C41571-0951-47E5-B24F-D8533E0504BA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E4C41571-0951-47E5-B24F-D8533E0504BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4C41571-0951-47E5-B24F-D8533E0504BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4C41571-0951-47E5-B24F-D8533E0504BA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{E4C41571-0951-47E5-B24F-D8533E0504BA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{E4C41571-0951-47E5-B24F-D8533E0504BA}.Release|x86.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Backpack\Backpack.csproj
