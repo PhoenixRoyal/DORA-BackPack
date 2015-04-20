@@ -8,20 +8,21 @@ using System.Diagnostics;
 
 namespace Backpack
 {
-    class BuildScript
+    class BuildScripts
     {
         private string[] Commands;
         private string Name;
-       
+
         public string Build(string path)
         {
-            Process.Start("cmd.exe", Commands[0]);
+            Process.Start("cmd.exe", "echo hi");
+            return "";
         }
 
-        public static BuildScript LoadScriptFromFile(string path)
+        public static BuildScripts LoadScriptFromFile(string path)
         {
             string json = File.ReadAllText(path);
-            return JsonConvert.DeserializeObject<BuildScript>(json);
+            return JsonConvert.DeserializeObject<BuildScripts>(json);
         }
     }
 }

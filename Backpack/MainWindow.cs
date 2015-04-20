@@ -14,6 +14,8 @@ public partial class MainWindow: Gtk.Window
 		this.Add(view);
 		SetSizeRequest(300, 400);
 		this.ShowAll();
+        Backpack.BuildScripts BScript1 = Backpack.BuildScripts.LoadScriptFromFile("BuildScriptC.json");
+        BScript1.Build("hi");
 	}
 
 	protected void OnDeleteEvent (object sender, DeleteEventArgs a)
