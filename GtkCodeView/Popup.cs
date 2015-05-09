@@ -34,10 +34,7 @@ namespace GtkCodeView
                key != Gdk.Key.Left &&
                key != Gdk.Key.Right)
             {
-                if (args.Event.KeyValue >= 33 && args.Event.KeyValue <= 126)
-                {
-                    _buffer.InsertAtCursor(key.ToString());
-                }
+
                 if (args.Event.Key == Gdk.Key.space || args.Event.Key == Gdk.Key.Tab)
                 {
                     var model = tree.Model;
@@ -50,12 +47,16 @@ namespace GtkCodeView
                     }
                     _buffer.InsertAtCursor(" ");
                 }
-                if (args.Event.Key == Gdk.Key.BackSpace)
+                else if (args.Event.Key == Gdk.Key.BackSpace)
                 {
                     var start = _buffer.GetIterAtMark(_buffer.InsertMark);
                     var end = start;
                     start.BackwardChar();
                     _buffer.Delete(ref start, ref end);
+                }
+                else
+                {
+                    _buffer.InsertAtCursor(Char.ToString((char)key));
                 }
                 DisplayWindow.Destroy();
             }
