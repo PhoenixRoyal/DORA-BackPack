@@ -88,6 +88,11 @@ namespace GtkCodeView
                 p.Parse(Theme.GutterForeground);
                 layout.Attributes.Insert(new Pango.AttrForeground(p));
             }
+            if(Theme != null && Theme.Font != null)
+            {
+                var f = Pango.FontDescription.FromString(Theme.Font);
+                layout.Attributes.Insert(new Pango.AttrFontDesc(f));
+            }
             window.ClearArea(window.VisibleRegion.Clipbox, false);
             window.DrawLayout(new Gdk.GC((Gdk.Drawable)GdkWindow), 2, y, layout);
         }
@@ -136,7 +141,6 @@ namespace GtkCodeView
                 }
             }
             HiglightBrackets();
-            Console.WriteLine("Buffer Changed");
             CreatePopUp();
 		}
 

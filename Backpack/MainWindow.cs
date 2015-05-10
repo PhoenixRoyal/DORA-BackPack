@@ -19,8 +19,6 @@ public partial class MainWindow: Gtk.Window
         ec.View = view;
         PluginLoader.LoadPlugins(ec);
 		this.ShowAll();
-        var BScript1 = BuildScripts.LoadScriptFromFile("BuildScriptC.json");
-        BScript1.Build("D:");
 	}
 
 	protected void OnDeleteEvent (object sender, DeleteEventArgs a)
