@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace BackpackAPI
 {
-    interface IPluginContext
+    public interface IPluginContext
     {
-        
+        GtkCodeView.GtkCodeView View { get; set; }
     }
 }

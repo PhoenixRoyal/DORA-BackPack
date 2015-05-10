@@ -10,13 +10,21 @@ namespace Backpack
 {
     class BuildScripts
     {
-        private string[] Commands;
-        private string Name;
+        public string[] Commands;
+        public string Name;
 
-        public string Build(string path)
+        public void Build(string path)
         {
-            Process.Start("cmd.exe", "echo hi");
-            return "";
+            foreach(var i in Commands)
+            {
+                var s = i.Replace("$file", path);
+                var command = s.Split(null)[0];
+                var p = new Process();
+                p.StartInfo.UseShellExecute = true;
+                p.StartInfo.Arguments = s.Remove(0,command.Length);
+                p.StartInfo.FileName = command;
+                p.Start();
+            }
         }
 
         public static BuildScripts LoadScriptFromFile(string path)

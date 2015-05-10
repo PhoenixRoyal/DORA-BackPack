@@ -1,6 +1,8 @@
 using System;
 using Gtk;
 using GtkCodeView;
+using Backpack.Plugins;
+using Backpack;
 
 public partial class MainWindow: Gtk.Window
 {	
@@ -13,9 +15,12 @@ public partial class MainWindow: Gtk.Window
 		view.SetTheme(t);
 		this.Add(view);
 		SetSizeRequest(300, 400);
+        var ec = new EditorContext();
+        ec.View = view;
+        PluginLoader.LoadPlugins(ec);
 		this.ShowAll();
-        Backpack.BuildScripts BScript1 = Backpack.BuildScripts.LoadScriptFromFile("BuildScriptC.json");
-        BScript1.Build("hi");
+        var BScript1 = BuildScripts.LoadScriptFromFile("BuildScriptC.json");
+        BScript1.Build("D:");
 	}
 
 	protected void OnDeleteEvent (object sender, DeleteEventArgs a)

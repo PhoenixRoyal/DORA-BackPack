@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BackpackAPI
 {
-    interface IPlugin
+    public interface IPlugin
     {
         string Name { get; }
 
@@ -16,7 +16,7 @@ namespace BackpackAPI
 
         string Version { get; }
 
-        void Init();
+        void Init(IPluginContext c);
 
         void Unload();
     }
