@@ -14,7 +14,7 @@ public partial class MainWindow: Gtk.Window
 		var view = new GtkCodeView.GtkCodeView(l);
 		view.SetTheme(t);
 		this.Add(view);
-		SetSizeRequest(300, 400);
+		SetSizeRequest(300, 405);
         var ec = new EditorContext();
         ec.View = view;
         PluginLoader.LoadPlugins(ec);
